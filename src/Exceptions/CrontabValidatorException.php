@@ -3,13 +3,13 @@
  * @author hollodotme
  */
 
-namespace hollodotme\CrontabIntervalValidator\Exceptions;
+namespace hollodotme\CrontabValidator\Exceptions;
 
 /**
- * Class CrontabIntervalValidatorException
- * @package hollodotme\CrontabIntervalValidator\Exceptions
+ * Class CrontabValidatorException
+ * @package hollodotme\CrontabValidator\Exceptions
  */
-class CrontabIntervalValidatorException extends \Exception
+class CrontabValidatorException extends \Exception
 {
 
 }
