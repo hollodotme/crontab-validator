@@ -17,6 +17,12 @@ A validator for crontab values
 
 * PHP >= 7.0.0
 
+## Installation
+
+```
+composer require "hollodotme/crontab-validator"
+```
+
 ## Usage
 
 ### Boolean validation
