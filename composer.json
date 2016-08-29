@@ -1,0 +1,48 @@
+{
+	"name": "hollodotme/crontab-validator",
+	"description": "A validator for crontab values",
+	"minimum-stability": "dev",
+	"prefer-stable": true,
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Holger Woltersdorf (hollodotme)",
+			"email": "hw@hollo.me"
+		}
+	],
+	"support": {
+		"source": "https://github.com/hollodotme/crontab-validator"
+	},
+	"require": {
+		"php": ">=7.0"
+	},
+	"require-dev": {
+		"tm/tooly-composer-script": "^1.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"hollodotme\\CrontabValidator\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"hollodotme\\CrontabValidator\\Tests\\": "tests/"
+		}
+	},
+	"scripts": {
+		"post-install-cmd": "Tooly\\ScriptHandler::installPharTools",
+		"post-update-cmd": "Tooly\\ScriptHandler::installPharTools"
+	},
+	"extra": {
+		"tools": {
+			"phpunit": {
+				"url": "https://phar.phpunit.de/phpunit.phar",
+				"only-dev": true
+			},
+			"coveralls": {
+				"url": "https://github.com/satooshi/php-coveralls/releases/download/v1.0.1/coveralls.phar",
+				"only-dev": true
+			}
+		}
+	}
+}
