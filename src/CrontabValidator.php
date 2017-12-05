@@ -41,7 +41,7 @@ class CrontabValidator
 			$sections[ $section ] = "\*(/\d+)?|{$number}(/\d+)?|{$range}(,{$range})*";
 		}
 
-		$joinedSections = '(' . join( ')\s+(', $sections ) . ')';
+		$joinedSections = '(' . implode( ')\s+(', $sections ) . ')';
 		$replacements   = '@reboot|@yearly|@annually|@monthly|@weekly|@daily|@midnight|@hourly';
 
 		return "^({$joinedSections}|({$replacements}))$";
