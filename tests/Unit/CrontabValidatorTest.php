@@ -7,17 +7,19 @@ namespace hollodotme\CrontabValidator\Tests\Unit;
 
 use hollodotme\CrontabValidator\CrontabValidator;
 use hollodotme\CrontabValidator\Exceptions\InvalidCrontabInterval;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class CrontabValidatorTest
  * @package hollodotme\CrontabValidator\Tests\Unit
  */
-class CrontabValidatorTest extends \PHPUnit_Framework_TestCase
+class CrontabValidatorTest extends TestCase
 {
 	/**
 	 * @param string $crontabInterval
 	 *
 	 * @dataProvider validIntervalProvider
+	 * @throws InvalidCrontabInterval
 	 */
 	public function testIntervalIsValid( string $crontabInterval )
 	{
@@ -30,7 +32,7 @@ class CrontabValidatorTest extends \PHPUnit_Framework_TestCase
 
 	public function validIntervalProvider() : array
 	{
-		return require(__DIR__ . '/data/ValidCrontabIntervals.php');
+		return require __DIR__ . '/data/ValidCrontabIntervals.php';
 	}
 
 	/**
@@ -47,9 +49,12 @@ class CrontabValidatorTest extends \PHPUnit_Framework_TestCase
 
 	public function invalidIntervalProvider() : array
 	{
-		return require(__DIR__ . '/data/InvalidCrontabIntervals.php');
+		return require __DIR__ . '/data/InvalidCrontabIntervals.php';
 	}
 
+	/**
+	 * @throws InvalidCrontabInterval
+	 */
 	public function testInvalidIntervalThrowsException()
 	{
 		$this->expectException( InvalidCrontabInterval::class );
