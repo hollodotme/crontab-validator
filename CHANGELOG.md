@@ -1,7 +1,7 @@
 # CHANGELOG
 
 All notable changes to this project will be documented in this file.
-This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com).
+This project adheres to [Semantic Versioning](http://semver.org) and [Keep a CHANGELOG](http://keepachangelog.com).
 
 ## [2.0.0] - 2017-12-11
 
@@ -13,12 +13,23 @@ This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CH
 * Support for the `#[1-5]` modifier in the day of week section
 * Support for the `?` instead of an `*` in day of month section
 * Support for the `?` instead of an `*` in day of week section
-* Support for whitespaces at the beginning and end of the interval expression, e.g. `  * * * * *   `
+* Support for whitespaces at the beginning and end of the expression
 * Stricter step value checking for each section
+
+### Changed
+
+* Terminology from "crontab interval" to "crontab expression"
+* Renamed exception class `InvalidCrontabInterval` to `InvalidExpressionException`
+* Class `InvalidExpressionException` now extends `\InvalidArgumentException` instead of `\Exception`
+* Fixed `InvalidExpressionException`'s message to match the documentation
+* Renamed `CrontabValidator->isIntervalValid()` to `CrontabValidator->isExpressionValid()`
+* Renamed `CrontabValidator->guardIntervalIsValid()` to `CrontabValidator->guardExpressionIsValid()`
+* Renamed parameters and method names from "interval" to "expression"
 
 ### Removed
 
 * Support for PHP 7.0 (Supported versions: PHP >= 7.1)
+* Package base exception `CrontabValidatorException`
 
 ## [1.0.1] - 2017-12-05
 
