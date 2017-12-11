@@ -52,14 +52,16 @@ final class CrontabValidatorTest extends TestCase
 		return require __DIR__ . '/DataProviders/InvalidCrontabIntervals.php';
 	}
 
-	/**
-	 * @throws InvalidCrontabInterval
-	 */
 	public function testInvalidIntervalThrowsException() : void
 	{
-		$this->expectException( InvalidCrontabInterval::class );
-
-		(new CrontabValidator())->guardIntervalIsValid( ' abc def hij klm nop ' );
+		try
+		{
+			(new CrontabValidator())->guardIntervalIsValid( ' abc def hij klm nop ' );
+		}
+		catch ( InvalidCrontabInterval $e )
+		{
+			$this->assertSame( ' abc def hij klm nop ', $e->getCrontabInterval() );
+		}
 	}
 
 	public function testExpressionAllowsTheLastModifierInDayOfMonth() : void
