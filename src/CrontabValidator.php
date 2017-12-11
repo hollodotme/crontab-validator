@@ -62,7 +62,7 @@ class CrontabValidator
 	 *
 	 * @throws InvalidCrontabInterval
 	 */
-	public function guardIntervalIsValid( string $crontabInterval )
+	public function guardIntervalIsValid( string $crontabInterval ) : void
 	{
 		if ( !$this->isIntervalValid( $crontabInterval ) )
 		{
