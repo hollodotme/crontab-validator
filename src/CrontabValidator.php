@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * @author hollodotme
  */
@@ -27,24 +27,33 @@ class CrontabValidator
 	private function buildCrontabIntervalRegexp() : string
 	{
 		$numbers = [
-			'min'     => '[0-5]?\d',
-			'hour'    => '[01]?\d|2[0-3]',
-			'date'    => '0?[1-9]|[12]\d|3[01]',
-			'month'   => '[1-9]|1[012]|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec',
-			'weekday' => '[0-7]|mon|tue|wed|thu|fri|sat|sun',
+			'min'        => '[0-5]?\d',
+			'hour'       => '[01]?\d|2[0-3]',
+			'dayOfMonth' => '((0?[1-9]|[12]\d|3[01])[LW]?|\?)',
+			'month'      => '0?[1-9]|1[012]|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec',
+			'dayOfWeek'  => '([0-7]|mon|tue|wed|thu|fri|sat|sun|\?)(L|\#[1-5])?',
+		];
+
+		$steps = [
+			'min'        => '(0?[1-9]|[1-5]\d)',
+			'hour'       => '(0?[1-9]|1\d|2[0-3])',
+			'dayOfMonth' => '(0?[1-9]|[12]\d|3[01])',
+			'month'      => '(0?[1-9]|1[012])',
+			'dayOfWeek'  => '[1-7]',
 		];
 
 		$sections = [];
 		foreach ( $numbers as $section => $number )
 		{
-			$range                = "({$number})(-({$number})(/\d+)?)?";
-			$sections[ $section ] = "\*(/\d+)?|{$number}(/\d+)?|{$range}(,{$range})*";
+			$step                 = $steps[ $section ];
+			$range                = "({$number})(-({$number})(/{$step})?)?";
+			$sections[ $section ] = "\*(/{$step})?|{$number}(/{$step})?|{$range}(,{$range})*";
 		}
 
 		$joinedSections = '(' . implode( ')\s+(', $sections ) . ')';
 		$replacements   = '@reboot|@yearly|@annually|@monthly|@weekly|@daily|@midnight|@hourly';
 
-		return "^({$joinedSections}|({$replacements}))$";
+		return "^\s*({$joinedSections}|({$replacements}))\s*$";
 	}
 
 	/**
