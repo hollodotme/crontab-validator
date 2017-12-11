@@ -5,7 +5,7 @@
 
 namespace hollodotme\CrontabValidator;
 
-use hollodotme\CrontabValidator\Exceptions\InvalidCrontabInterval;
+use hollodotme\CrontabValidator\Exceptions\InvalidExpressionException;
 
 /**
  * Class CrontabValidator
@@ -14,17 +14,17 @@ use hollodotme\CrontabValidator\Exceptions\InvalidCrontabInterval;
 class CrontabValidator
 {
 	/** @var string */
-	private $intervalRegexp;
+	private $expressionCheckRegExp;
 
 	public function __construct()
 	{
-		$this->intervalRegexp = $this->buildCrontabIntervalRegexp();
+		$this->expressionCheckRegExp = $this->buildExpressionCheckRegExp();
 	}
 
 	/**
 	 * @return string
 	 */
-	private function buildCrontabIntervalRegexp() : string
+	private function buildExpressionCheckRegExp() : string
 	{
 		$numbers = [
 			'min'        => '[0-5]?\d',
@@ -57,25 +57,25 @@ class CrontabValidator
 	}
 
 	/**
-	 * @param string $crontabInterval
+	 * @param string $expression
 	 *
 	 * @return bool
 	 */
-	public function isIntervalValid( string $crontabInterval ) : bool
+	public function isExpressionValid( string $expression ) : bool
 	{
-		return (bool)preg_match( "#{$this->intervalRegexp}#i", $crontabInterval );
+		return (bool)preg_match( "#{$this->expressionCheckRegExp}#i", $expression );
 	}
 
 	/**
-	 * @param string $crontabInterval
+	 * @param string $expression
 	 *
-	 * @throws InvalidCrontabInterval
+	 * @throws InvalidExpressionException
 	 */
-	public function guardIntervalIsValid( string $crontabInterval ) : void
+	public function guardExpressionIsValid( string $expression ) : void
 	{
-		if ( !$this->isIntervalValid( $crontabInterval ) )
+		if ( !$this->isExpressionValid( $expression ) )
 		{
-			throw (new InvalidCrontabInterval( 'Invalid crontab interval' ))->withCrontabInterval( $crontabInterval );
+			throw (new InvalidExpressionException())->withExpression( $expression );
 		}
 	}
 }

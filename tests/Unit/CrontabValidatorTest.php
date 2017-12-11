@@ -6,7 +6,7 @@
 namespace hollodotme\CrontabValidator\Tests\Unit;
 
 use hollodotme\CrontabValidator\CrontabValidator;
-use hollodotme\CrontabValidator\Exceptions\InvalidCrontabInterval;
+use hollodotme\CrontabValidator\Exceptions\InvalidExpressionException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -16,51 +16,56 @@ use PHPUnit\Framework\TestCase;
 final class CrontabValidatorTest extends TestCase
 {
 	/**
-	 * @param string $crontabInterval
+	 * @param string $expression
 	 *
-	 * @dataProvider validIntervalProvider
-	 * @throws InvalidCrontabInterval
+	 * @dataProvider validExpressionsProvider
 	 */
-	public function testIntervalIsValid( string $crontabInterval ) : void
+	public function testExpressionIsValid( string $expression ) : void
 	{
 		$validator = new CrontabValidator();
 
-		$this->assertTrue( $validator->isIntervalValid( $crontabInterval ) );
+		$this->assertTrue( $validator->isExpressionValid( $expression ) );
 
-		$validator->guardIntervalIsValid( $crontabInterval );
+		$validator->guardExpressionIsValid( $expression );
 	}
 
-	public function validIntervalProvider() : array
+	public function validExpressionsProvider() : array
 	{
-		return require __DIR__ . '/DataProviders/ValidCrontabIntervals.php';
+		return require __DIR__ . '/DataProviders/ValidExpressions.php';
 	}
 
 	/**
-	 * @param string $crontabInterval
+	 * @param string $expression
 	 *
-	 * @dataProvider invalidIntervalProvider
+	 * @dataProvider invalidExpressionsProvider
 	 */
-	public function testIntervalIsInValid( string $crontabInterval ) : void
+	public function testExpressionIsInvalid( string $expression ) : void
 	{
 		$validator = new CrontabValidator();
 
-		$this->assertFalse( $validator->isIntervalValid( $crontabInterval ) );
+		$this->assertFalse( $validator->isExpressionValid( $expression ) );
 	}
 
-	public function invalidIntervalProvider() : array
+	public function invalidExpressionsProvider() : array
 	{
-		return require __DIR__ . '/DataProviders/InvalidCrontabIntervals.php';
+		return require __DIR__ . '/DataProviders/InvalidExpressions.php';
 	}
 
-	public function testInvalidIntervalThrowsException() : void
+	/**
+	 * @param string $expression
+	 *
+	 * @dataProvider invalidExpressionsProvider
+	 */
+	public function testInvalidExpressionThrowsException( string $expression ) : void
 	{
 		try
 		{
-			(new CrontabValidator())->guardIntervalIsValid( ' abc def hij klm nop ' );
+			(new CrontabValidator())->guardExpressionIsValid( $expression );
 		}
-		catch ( InvalidCrontabInterval $e )
+		catch ( InvalidExpressionException $e )
 		{
-			$this->assertSame( ' abc def hij klm nop ', $e->getCrontabInterval() );
+			$this->assertSame( 'Invalid crontab expression: "' . $expression . '"', $e->getMessage() );
+			$this->assertSame( $expression, $e->getExpression() );
 		}
 	}
 
@@ -68,102 +73,102 @@ final class CrontabValidatorTest extends TestCase
 	{
 		$validator = new CrontabValidator();
 
-		$this->assertTrue( $validator->isIntervalValid( '* * 5L * *' ) );
+		$this->assertTrue( $validator->isExpressionValid( '* * 5L * *' ) );
 	}
 
 	public function testExpressionAllowsTheLastModifierInDayOfWeek() : void
 	{
 		$validator = new CrontabValidator();
 
-		$this->assertTrue( $validator->isIntervalValid( '* * * * 5L' ) );
-		$this->assertTrue( $validator->isIntervalValid( '* * * * WEDL' ) );
-		$this->assertTrue( $validator->isIntervalValid( '* * * * 3L,5L' ) );
-		$this->assertTrue( $validator->isIntervalValid( '* * * * 2L-5L' ) );
+		$this->assertTrue( $validator->isExpressionValid( '* * * * 5L' ) );
+		$this->assertTrue( $validator->isExpressionValid( '* * * * WEDL' ) );
+		$this->assertTrue( $validator->isExpressionValid( '* * * * 3L,5L' ) );
+		$this->assertTrue( $validator->isExpressionValid( '* * * * 2L-5L' ) );
 	}
 
 	public function testExpressionAllowsTheHashtagModifierInDayOfWeek() : void
 	{
 		$validator = new CrontabValidator();
 
-		$this->assertTrue( $validator->isIntervalValid( '* * * * 5#1' ) );
-		$this->assertTrue( $validator->isIntervalValid( '* * * * 4#2' ) );
-		$this->assertTrue( $validator->isIntervalValid( '* * * * 3#3' ) );
-		$this->assertTrue( $validator->isIntervalValid( '* * * * 2#4' ) );
-		$this->assertTrue( $validator->isIntervalValid( '* * * * 1#5' ) );
-		$this->assertTrue( $validator->isIntervalValid( '* * * * MON#5' ) );
-		$this->assertTrue( $validator->isIntervalValid( '* * * * TUE#4' ) );
-		$this->assertTrue( $validator->isIntervalValid( '* * * * WED#3' ) );
-		$this->assertTrue( $validator->isIntervalValid( '* * * * thu#2' ) );
-		$this->assertTrue( $validator->isIntervalValid( '* * * * Fri#1' ) );
+		$this->assertTrue( $validator->isExpressionValid( '* * * * 5#1' ) );
+		$this->assertTrue( $validator->isExpressionValid( '* * * * 4#2' ) );
+		$this->assertTrue( $validator->isExpressionValid( '* * * * 3#3' ) );
+		$this->assertTrue( $validator->isExpressionValid( '* * * * 2#4' ) );
+		$this->assertTrue( $validator->isExpressionValid( '* * * * 1#5' ) );
+		$this->assertTrue( $validator->isExpressionValid( '* * * * MON#5' ) );
+		$this->assertTrue( $validator->isExpressionValid( '* * * * TUE#4' ) );
+		$this->assertTrue( $validator->isExpressionValid( '* * * * WED#3' ) );
+		$this->assertTrue( $validator->isExpressionValid( '* * * * thu#2' ) );
+		$this->assertTrue( $validator->isExpressionValid( '* * * * Fri#1' ) );
 	}
 
 	public function testInvalidHashtagModifierIsNotAllowed() : void
 	{
 		$validator = new CrontabValidator();
 
-		$this->assertFalse( $validator->isIntervalValid( '* * * * 1#6' ) );
-		$this->assertFalse( $validator->isIntervalValid( '* * * * Wed#0' ) );
+		$this->assertFalse( $validator->isExpressionValid( '* * * * 1#6' ) );
+		$this->assertFalse( $validator->isExpressionValid( '* * * * Wed#0' ) );
 	}
 
 	public function testCanUseQuestionmarkInsteadOfAsteriskForDayOfMonth() : void
 	{
 		$validator = new CrontabValidator();
 
-		$this->assertTrue( $validator->isIntervalValid( '* * ? * *' ) );
+		$this->assertTrue( $validator->isExpressionValid( '* * ? * *' ) );
 	}
 
 	public function testInvalidStepsAreNotAllowedInMinuteSection() : void
 	{
 		$validator = new CrontabValidator();
 
-		# Invalid minutes step
-		$this->assertFalse( $validator->isIntervalValid( '*/-1 * * * *' ) );
-		$this->assertFalse( $validator->isIntervalValid( '*/0 * * * *' ) );
-		$this->assertFalse( $validator->isIntervalValid( '*/60 * * * *' ) );
-		$this->assertFalse( $validator->isIntervalValid( '*/61 * * * *' ) );
+		# Invalid minute steps
+		$this->assertFalse( $validator->isExpressionValid( '*/-1 * * * *' ) );
+		$this->assertFalse( $validator->isExpressionValid( '*/0 * * * *' ) );
+		$this->assertFalse( $validator->isExpressionValid( '*/60 * * * *' ) );
+		$this->assertFalse( $validator->isExpressionValid( '*/61 * * * *' ) );
 	}
 
 	public function testInvalidStepsAreNotAllowedInHourSection() : void
 	{
 		$validator = new CrontabValidator();
 
-		# Invalid minutes step
-		$this->assertFalse( $validator->isIntervalValid( '* */-1 * * *' ) );
-		$this->assertFalse( $validator->isIntervalValid( '* */0 * * *' ) );
-		$this->assertFalse( $validator->isIntervalValid( '* */24 * * *' ) );
-		$this->assertFalse( $validator->isIntervalValid( '* */26 * * *' ) );
+		# Invalid hour steps
+		$this->assertFalse( $validator->isExpressionValid( '* */-1 * * *' ) );
+		$this->assertFalse( $validator->isExpressionValid( '* */0 * * *' ) );
+		$this->assertFalse( $validator->isExpressionValid( '* */24 * * *' ) );
+		$this->assertFalse( $validator->isExpressionValid( '* */26 * * *' ) );
 	}
 
 	public function testInvalidStepsAreNotAllowedInDayOfMonthSection() : void
 	{
 		$validator = new CrontabValidator();
 
-		# Invalid minutes step
-		$this->assertFalse( $validator->isIntervalValid( '* * */-1 * *' ) );
-		$this->assertFalse( $validator->isIntervalValid( '* * */0 * *' ) );
-		$this->assertFalse( $validator->isIntervalValid( '* * */32 * *' ) );
-		$this->assertFalse( $validator->isIntervalValid( '* * */35 * *' ) );
+		# Invalid day of month steps
+		$this->assertFalse( $validator->isExpressionValid( '* * */-1 * *' ) );
+		$this->assertFalse( $validator->isExpressionValid( '* * */0 * *' ) );
+		$this->assertFalse( $validator->isExpressionValid( '* * */32 * *' ) );
+		$this->assertFalse( $validator->isExpressionValid( '* * */35 * *' ) );
 	}
 
 	public function testInvalidStepsAreNotAllowedInMonthSection() : void
 	{
 		$validator = new CrontabValidator();
 
-		# Invalid minutes step
-		$this->assertFalse( $validator->isIntervalValid( '* * * */-1 *' ) );
-		$this->assertFalse( $validator->isIntervalValid( '* * * */0 *' ) );
-		$this->assertFalse( $validator->isIntervalValid( '* * * */13 *' ) );
-		$this->assertFalse( $validator->isIntervalValid( '* * * */15 *' ) );
+		# Invalid month steps
+		$this->assertFalse( $validator->isExpressionValid( '* * * */-1 *' ) );
+		$this->assertFalse( $validator->isExpressionValid( '* * * */0 *' ) );
+		$this->assertFalse( $validator->isExpressionValid( '* * * */13 *' ) );
+		$this->assertFalse( $validator->isExpressionValid( '* * * */15 *' ) );
 	}
 
 	public function testInvalidStepsAreNotAllowedInDayOfWeekSection() : void
 	{
 		$validator = new CrontabValidator();
 
-		# Invalid minutes step
-		$this->assertFalse( $validator->isIntervalValid( '* * * * */-1' ) );
-		$this->assertFalse( $validator->isIntervalValid( '* * * * */0' ) );
-		$this->assertFalse( $validator->isIntervalValid( '* * * * */8' ) );
-		$this->assertFalse( $validator->isIntervalValid( '* * * * */10' ) );
+		# Invalid day of week steps
+		$this->assertFalse( $validator->isExpressionValid( '* * * * */-1' ) );
+		$this->assertFalse( $validator->isExpressionValid( '* * * * */0' ) );
+		$this->assertFalse( $validator->isExpressionValid( '* * * * */8' ) );
+		$this->assertFalse( $validator->isExpressionValid( '* * * * */10' ) );
 	}
 }

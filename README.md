@@ -15,7 +15,7 @@ Sources used to determine the allowed expressions:
 
 ## Features
 
-* Validation of crontab interval strings like <kbd>6,21,36,51 7-23/1 * FEB-NOV/2 *</kbd>.
+* Validation of crontab expressions like <kbd>6,21,36,51 7-23/1 * FEB-NOV/2 *</kbd>.
 
 ## Requirements
 
@@ -39,13 +39,14 @@ namespace MyVendor\MyProject;
 use hollodotme\CrontabValidator\CrontabValidator;
 
 $validator = new CrontabValidator();
-if ( $validator->isIntervalValid('6,21,36,51 7-23/1 * FEB-NOV/2 *') )
+
+if ( $validator->isExpressionValid( '6,21,36,51 7-23/1 * FEB-NOV/2 *' ) )
 {
-	echo "Interval is valid.";
+	echo 'Expression is valid.';
 }
 else
 {
-	echo "Interval is invalid.";	
+	echo 'Expression is invalid.';	
 }
 ```
 
@@ -57,27 +58,27 @@ else
 namespace MyVendor\MyProject;
 
 use hollodotme\CrontabValidator\CrontabValidator;
-use hollodotme\CrontabValidator\Exceptions\InvalidCrontabInterval;
+use hollodotme\CrontabValidator\Exceptions\InvalidExpressionException;
 
 $validator = new CrontabValidator();
 
 try 
 {
 	# => All fine, execution continues
-	$validator->guardIntervalIsValid('6,21,36,51 7-23/1 * FEB-NOV/2 *');
+	$validator->guardExpressionIsValid( '6,21,36,51 7-23/1 * FEB-NOV/2 *' );
 	
-	# => This will raise an InvalidCrontabInterval exception
-	$validator->guardIntervalIsValid('this is not a valid interval');
+	# => This will raise an InvalidExpressionException
+	$validator->guardExpressionIsValid( 'this is not a valid interval' );
 }
-catch (InvalidCrontabInterval $e)
+catch ( InvalidExpressionException $e )
 {
-	echo $e->getMessage() . ': "' . $e->getCrontabInterval() . '"';
+	echo $e->getMessage();
 }
 ```
 
 **Prints:**
 
-	Invalid crontab interval: "this is not a valid interval"
+	Invalid crontab expression: "this is not a valid interval"
 	
 
 ---
