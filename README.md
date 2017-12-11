@@ -5,9 +5,14 @@
 [![Latest Unstable Version](https://poser.pugx.org/hollodotme/crontab-validator/v/unstable)](https://packagist.org/packages/hollodotme/crontab-validator) 
 [![License](https://poser.pugx.org/hollodotme/crontab-validator/license)](https://packagist.org/packages/hollodotme/crontab-validator)
 
-# hollodotme\CrontabValidator
+# CrontabValidator
 
-A validator for crontab values
+A validator for crontab expressions.
+
+Sources used to determine the allowed expressions:
+
+* https://crontab.guru/
+* https://en.wikipedia.org/wiki/Cron
 
 ## Features
 
@@ -15,7 +20,7 @@ A validator for crontab values
 
 ## Requirements
 
-* PHP >= 7.0.0
+* PHP >= 7.1
 
 ## Installation
 

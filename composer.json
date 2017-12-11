@@ -1,6 +1,6 @@
 {
 	"name": "hollodotme/crontab-validator",
-	"description": "A validator for crontab values",
+	"description": "A validator for crontab expressions.",
 	"minimum-stability": "dev",
 	"prefer-stable": true,
 	"license": "MIT",
