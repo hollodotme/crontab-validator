@@ -1,5 +1,5 @@
 <phpunit
-	bootstrap="../tests/Unit/bootstrap.php"
+	bootstrap="../tests/bootstrap.php"
 	verbose="true"
 	beStrictAboutOutputDuringTests="true"
 	beStrictAboutTestSize="true"
@@ -8,7 +8,7 @@
 	convertNoticesToExceptions="true"
 	convertWarningsToExceptions="true">
 	<testsuites>
-		<testsuite name="CrontabValidator">
+		<testsuite name="CrontabValidator-Unit">
 			<directory suffix="Test.php">../tests/Unit</directory>
 		</testsuite>
 	</testsuites>
