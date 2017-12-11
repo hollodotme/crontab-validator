@@ -22,4 +22,6 @@ We accept contributions via pull requests on [GitHub](https://github.com/hollodo
 
 ## Running Tests
 
-    $ vendor/bin/phpunit -c build/
+```bash
+$ vendor/bin/phpunit -c build/
+```
