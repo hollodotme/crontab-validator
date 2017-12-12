@@ -73,7 +73,8 @@ final class CrontabValidatorTest extends TestCase
 	{
 		$validator = new CrontabValidator();
 
-		$this->assertTrue( $validator->isExpressionValid( '* * 5L * *' ) );
+		$this->assertTrue( $validator->isExpressionValid( '* * L * *' ) );
+		$this->assertTrue( $validator->isExpressionValid( '* * 5W,L * *' ) );
 	}
 
 	public function testExpressionAllowsTheLastModifierInDayOfWeek() : void

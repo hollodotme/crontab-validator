@@ -29,7 +29,7 @@ class CrontabValidator
 		$numbers = [
 			'min'        => '[0-5]?\d',
 			'hour'       => '[01]?\d|2[0-3]',
-			'dayOfMonth' => '((0?[1-9]|[12]\d|3[01])[LW]?|\?)',
+			'dayOfMonth' => '((0?[1-9]|[12]\d|3[01])W?|L|\?)',
 			'month'      => '0?[1-9]|1[012]|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec',
 			'dayOfWeek'  => '([0-7]|mon|tue|wed|thu|fri|sat|sun|\?)(L|\#[1-5])?',
 		];
